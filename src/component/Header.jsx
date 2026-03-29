@@ -10,6 +10,7 @@ export default function Header() {
   const { cart } = useContext(MainContext);
 
   const CartCount = cart.reduce((total, item) => total + item.quantity, 0);
+
   return (
     <header className=" bg-white/20 backdrop-blur-2xl border border-white/30 py-3 sticky top-0 z-9999">
       <Container className="flex items-center justify-between">

@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react";
 import { MainContext } from "../Context/CartContext";
 
 export default function page() {
-  const { cart, setCart } = useContext(MainContext);
+  const { cart, setCart, increaseQty, decreaseQty } = useContext(MainContext);
   const totalPrice = cart.reduce(
     (total, item) => total + item.price * item.quantity,
     0,
@@ -24,9 +24,12 @@ export default function page() {
         ) : (
           cart.map((item) => (
             <div
-              key={item.pId}
+              key={item.id}
               className="flex justify-between items-center border-b py-4"
             >
+              <div className="w-[100px] h-[100px]">
+                <img src={item.images} alt="" />
+              </div>
               <div>
                 <h2 className="font-semibold">{item.title}</h2>
                 <p>₹{item.price}</p>
@@ -34,8 +37,8 @@ export default function page() {
 
               <div className="flex items-center gap-3">
                 <button
-                  onClick={() => decreaseQty(item.pId)}
-                  className="px-3 py-1 bg-gray-200"
+                  onClick={() => decreaseQty(item.id)}
+                  className="px-3 py-1 bg-gray-200 cursor-pointer"
                 >
                   -
                 </button>
@@ -43,16 +46,16 @@ export default function page() {
                 <span>{item.quantity}</span>
 
                 <button
-                  onClick={() => increaseQty(item.pId)}
-                  className="px-3 py-1 bg-gray-200"
+                  onClick={() => increaseQty(item.id)}
+                  className="px-3 py-1 bg-gray-200 cursor-pointer"
                 >
                   +
                 </button>
               </div>
 
               <button
-                onClick={() => removeItem(item.pId)}
-                className="text-red-500 cursor-pointer"
+                onClick={() => removeItem(item.id)}
+                className="text-red-500 cursor-pointer p-2 hover:bg-red-400 rounded-2xl hover:text-white duration-300 "
               >
                 Remove
               </button>
@@ -60,7 +63,9 @@ export default function page() {
           ))
         )}
 
-        <div className="mt-6 text-xl font-bold">Total: ₹{totalPrice}</div>
+        <div className="mt-6 text-xl font-bold cursor-pointer  bg-gray-300 rounded p-2">
+          Total: ₹{totalPrice}
+        </div>
       </div>
     </div>
   );

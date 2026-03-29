@@ -4,7 +4,7 @@ export const MainContext = createContext();
 
 export default function CartContext({ children }) {
   const [cart, setCart] = useState([]);
-  console.log(cart);
+  console.log(cart, "cart");
 
   const isFirstReander = useRef(true);
 
@@ -17,6 +17,26 @@ export default function CartContext({ children }) {
       setCart(parsed || []);
     }
   }, []);
+
+  const increaseQty = (id) => {
+    const updatedCart = cart.map((item) =>
+      item.id === id
+        ? { ...item, quantity: (item.quantity || 0) + 1 } // ✅ safe
+        : item,
+    );
+
+    setCart(updatedCart);
+  };
+
+  const decreaseQty = (id) => {
+    const updatedCart = cart
+      .map((item) =>
+        item.id === id ? { ...item, quantity: item.quantity - 1 } : item,
+      )
+      .filter((item) => item.quantity > 0);
+
+    setCart(updatedCart);
+  };
 
   const addtoCart = (product) => {
     setCart((prevCart) => {
@@ -32,6 +52,22 @@ export default function CartContext({ children }) {
       }
     });
   };
+
+  //   const addtoCart = (product) => {
+  //   setCart((prevCart) => {
+  //     const itemExist = prevCart.find((item) => item.id === product.id);
+
+  //     if (itemExist) {
+  //       return prevCart.map((item) =>
+  //         item.id === product.id
+  //           ? { ...item, quantity: item.quantity + 1 }
+  //           : item
+  //       );
+  //     } else {
+  //       return [...prevCart, { ...product, quantity: 1 }];
+  //     }
+  //   });
+  // };
 
   useEffect(() => {
     if (isFirstReander.current) {
@@ -58,7 +94,16 @@ export default function CartContext({ children }) {
   //   setCart();
   // };
   return (
-    <MainContext.Provider value={{ cart, setCart, addtoCart, toggleCartItem }}>
+    <MainContext.Provider
+      value={{
+        cart,
+        setCart,
+        addtoCart,
+        toggleCartItem,
+        increaseQty,
+        decreaseQty,
+      }}
+    >
       {children}
     </MainContext.Provider>
   );
